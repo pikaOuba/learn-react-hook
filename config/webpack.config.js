@@ -433,7 +433,8 @@ module.exports = function(webpackEnv) {
                     }
                    
                   },
-                  'sass-loader'
+                  'sass-loader',
+                  'postcss-loader'
                 ]
               })
             },

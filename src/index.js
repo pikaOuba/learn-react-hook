@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import './index.css'
 import App from './components/index/App'
 import Store from './stores/Index'
+import './utils/flexible'
 
 ReactDOM.render(
   <Store>
