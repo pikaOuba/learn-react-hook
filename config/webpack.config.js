@@ -24,7 +24,7 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
-
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const postcssNormalize = require('postcss-normalize');
 
 const appPackageJson = require(paths.appPackageJson);
@@ -417,6 +417,26 @@ module.exports = function(webpackEnv) {
                 inputSourceMap: shouldUseSourceMap,
               },
             },
+            {
+              test: /\.scss$/,
+              use: ExtractTextPlugin.extract({
+                fallback: 'style-loader',
+                use: [
+                  {
+                    loader: 'css-loader',
+                    options: {
+                      importLoaders: 2,
+                      sourceMap: true,
+                      modules:  {
+                        localIdentName: '[name]__[local]___[hash:base64:5]',
+                      },
+                    }
+                   
+                  },
+                  'sass-loader'
+                ]
+              })
+            },
             // "postcss" loader applies autoprefixer to our CSS.
             // "css" loader resolves paths in CSS and adds assets as dependencies.
             // "style" loader turns CSS into JS modules that inject <style> tags.
@@ -602,6 +622,7 @@ module.exports = function(webpackEnv) {
       // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
       // You can remove this if you don't use Moment.js:
       new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+      new ExtractTextPlugin({ filename: 'styles.[hash:8].css', allChunks: true, disable: !isEnvProduction }),
       // Generate a service worker script that will precache, and keep up to date,
       // the HTML & assets that are part of the webpack build.
       isEnvProduction &&
